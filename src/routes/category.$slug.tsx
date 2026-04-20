@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { CATEGORIES, SITE, getCategory, getPostsByCategory } from "@/data/posts";
+import { CATEGORIES, SITE, getCategory, getPostsByCategory, type Post } from "@/data/posts";
 import { PostCard } from "@/components/PostCard";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
@@ -66,7 +66,7 @@ function CategoryPage() {
         <p className="mt-16 text-center text-muted-foreground">No stories filed in this section yet.</p>
       ) : (
         <div className="mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p) => (
+          {posts.map((p: Post) => (
             <PostCard key={p.slug} post={p} />
           ))}
         </div>

@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { SITE, getCategory, getPost, getRelatedPosts } from "@/data/posts";
+import { SITE, getCategory, getPost, getRelatedPosts, type Post, type PostBlock } from "@/data/posts";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { PostCard } from "@/components/PostCard";
 
@@ -123,10 +123,10 @@ function PostPage() {
       <div className="mx-auto my-12 h-px max-w-3xl bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
 
       <div className="prose-article container-prose">
-        {post.body.map((b, i) => {
+        {(post.body as PostBlock[]).map((b: PostBlock, i: number) => {
           if (b.type === "h2") return <h2 key={i}>{b.text}</h2>;
           if (b.type === "h3") return <h3 key={i}>{b.text}</h3>;
-          if (b.type === "ul") return <ul key={i}>{b.items.map((it, j) => <li key={j}>{it}</li>)}</ul>;
+          if (b.type === "ul") return <ul key={i}>{b.items.map((it: string, j: number) => <li key={j}>{it}</li>)}</ul>;
           if (b.type === "quote") return (
             <blockquote key={i}>
               "{b.text}"
@@ -139,7 +139,7 @@ function PostPage() {
 
       {/* Tags */}
       <div className="container-prose mt-10 flex flex-wrap gap-2">
-        {post.tags.map((t) => (
+        {(post.tags as string[]).map((t: string) => (
           <span key={t} className="rounded-sm border border-border/60 px-2.5 py-1 text-[11px] uppercase tracking-widest text-muted-foreground">
             #{t}
           </span>
@@ -151,7 +151,7 @@ function PostPage() {
         <section className="container-prose mt-16 border-t border-border/60 pt-10">
           <h2 className="font-display text-3xl text-foreground">Frequently asked questions</h2>
           <dl className="mt-6 space-y-6">
-            {post.faqs.map((f) => (
+            {(post.faqs as { q: string; a: string }[]).map((f: { q: string; a: string }) => (
               <div key={f.q}>
                 <dt className="font-display text-lg text-gold">{f.q}</dt>
                 <dd className="mt-1 text-muted-foreground">{f.a}</dd>
@@ -177,7 +177,7 @@ function PostPage() {
             <h2 className="font-display text-3xl text-foreground">More from {category.name}</h2>
           </div>
           <div className="grid gap-10 md:grid-cols-3">
-            {related.map((p) => (
+            {(related as Post[]).map((p: Post) => (
               <PostCard key={p.slug} post={p} />
             ))}
           </div>
