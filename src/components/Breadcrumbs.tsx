@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-export type Crumb = { label: string; to?: string; params?: Record<string, string> };
+export type Crumb = { label: string; href?: string };
 
 export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
@@ -8,9 +8,8 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
       <ol className="flex flex-wrap items-center gap-2">
         {items.map((c, i) => (
           <li key={i} className="flex items-center gap-2">
-            {c.to ? (
-              // @ts-expect-error dynamic params
-              <Link to={c.to} params={c.params} className="hover:text-gold">
+            {c.href ? (
+              <Link to={c.href} className="hover:text-gold">
                 {c.label}
               </Link>
             ) : (
