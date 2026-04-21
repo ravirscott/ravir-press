@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES, POSTS, SITE, getRecentPosts, getPostsByCategory } from "@/data/posts";
+import { useEffect, useState } from "react";
+import { CATEGORIES, POSTS, SITE, getRecentPosts, type Post } from "@/data/posts";
 import { PostCard } from "@/components/PostCard";
+import { fetchAllPostsMerged } from "@/lib/posts-db";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,10 +30,13 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const recent = getRecentPosts(8);
+  const [allPosts, setAllPosts] = useState<Post[]>(() => getRecentPosts(50));
+  useEffect(() => { fetchAllPostsMerged().then(setAllPosts).catch(() => {}); }, []);
+  const recent = allPosts.slice(0, 8);
   const lead = recent[0];
   const secondary = recent.slice(1, 4);
   const rest = recent.slice(4);
+  const byCat = (slug: string) => allPosts.filter((p) => p.category === slug).slice(0, 3);
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 lg:py-14">
