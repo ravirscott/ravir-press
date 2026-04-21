@@ -1,7 +1,9 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { CATEGORIES, SITE, getCategory, getPostsByCategory, type Post } from "@/data/posts";
 import { PostCard } from "@/components/PostCard";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { fetchAllPostsMerged } from "@/lib/posts-db";
 
 export const Route = createFileRoute("/category/$slug")({
   loader: ({ params }) => {
@@ -50,7 +52,11 @@ export const Route = createFileRoute("/category/$slug")({
 });
 
 function CategoryPage() {
-  const { category, posts } = Route.useLoaderData();
+  const { category, posts: initialPosts } = Route.useLoaderData();
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  useEffect(() => {
+    fetchAllPostsMerged().then((all) => setPosts(all.filter((p) => p.category === category.slug))).catch(() => {});
+  }, [category.slug]);
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 lg:py-14">

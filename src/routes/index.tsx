@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES, POSTS, SITE, getRecentPosts, getPostsByCategory } from "@/data/posts";
+import { useEffect, useState } from "react";
+import { CATEGORIES, POSTS, SITE, getRecentPosts, type Post } from "@/data/posts";
 import { PostCard } from "@/components/PostCard";
+import { fetchAllPostsMerged } from "@/lib/posts-db";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,10 +30,13 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const recent = getRecentPosts(8);
+  const [allPosts, setAllPosts] = useState<Post[]>(() => getRecentPosts(50));
+  useEffect(() => { fetchAllPostsMerged().then(setAllPosts).catch(() => {}); }, []);
+  const recent = allPosts.slice(0, 8);
   const lead = recent[0];
   const secondary = recent.slice(1, 4);
   const rest = recent.slice(4);
+  const byCat = (slug: string) => allPosts.filter((p) => p.category === slug).slice(0, 3);
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 lg:py-14">
@@ -94,7 +99,7 @@ function HomePage() {
       {/* Per-category */}
       <section className="mt-20 grid gap-12 md:grid-cols-2">
         {CATEGORIES.slice(0, 4).map((c) => {
-          const posts = getPostsByCategory(c.slug).slice(0, 3);
+          const posts = byCat(c.slug);
           if (posts.length === 0) return null;
           return (
             <div key={c.slug}>
@@ -104,7 +109,7 @@ function HomePage() {
                   View all
                 </Link>
               </div>
-              {posts.map((p) => (
+              {posts.map((p: Post) => (
                 <PostCard key={p.slug} post={p} variant="compact" />
               ))}
             </div>

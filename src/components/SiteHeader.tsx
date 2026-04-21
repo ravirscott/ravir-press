@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Shield } from "lucide-react";
 import { CATEGORIES, SITE } from "@/data/posts";
+import { useAuth } from "@/lib/auth-context";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { isEditor } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
@@ -33,13 +35,20 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="rounded-md p-2 text-foreground lg:hidden"
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          <div className="flex items-center gap-2">
+            {isEditor && (
+              <Link to="/admin" className="hidden items-center gap-1 rounded-md border border-gold/40 px-2.5 py-1 text-[11px] uppercase tracking-widest text-gold hover:bg-gold/10 sm:inline-flex">
+                <Shield className="h-3 w-3" /> Admin
+              </Link>
+            )}
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="rounded-md p-2 text-foreground lg:hidden"
+              aria-label="Toggle menu"
+            >
+              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
         {open && (
