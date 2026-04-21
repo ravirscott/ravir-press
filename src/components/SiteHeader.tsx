@@ -35,13 +35,20 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="rounded-md p-2 text-foreground lg:hidden"
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          <div className="flex items-center gap-2">
+            {isEditor && (
+              <Link to="/admin" className="hidden items-center gap-1 rounded-md border border-gold/40 px-2.5 py-1 text-[11px] uppercase tracking-widest text-gold hover:bg-gold/10 sm:inline-flex">
+                <Shield className="h-3 w-3" /> Admin
+              </Link>
+            )}
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="rounded-md p-2 text-foreground lg:hidden"
+              aria-label="Toggle menu"
+            >
+              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
         {open && (

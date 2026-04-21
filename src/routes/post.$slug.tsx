@@ -4,8 +4,13 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { PostCard } from "@/components/PostCard";
 
 export const Route = createFileRoute("/post/$slug")({
-  loader: ({ params }) => {
-    const post = getPost(params.slug);
+  loader: async ({ params }) => {
+    let post = getPost(params.slug);
+    if (!post) {
+      const { fetchPostBySlug } = await import("@/lib/posts-db");
+      const dbPost = await fetchPostBySlug(params.slug);
+      if (dbPost) post = dbPost;
+    }
     if (!post) throw notFound();
     const category = getCategory(post.category)!;
     const related = getRelatedPosts(post);
