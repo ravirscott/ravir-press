@@ -99,7 +99,7 @@ function HomePage() {
       {/* Per-category */}
       <section className="mt-20 grid gap-12 md:grid-cols-2">
         {CATEGORIES.slice(0, 4).map((c) => {
-          const posts = getPostsByCategory(c.slug).slice(0, 3);
+          const posts = byCat(c.slug);
           if (posts.length === 0) return null;
           return (
             <div key={c.slug}>
@@ -109,7 +109,7 @@ function HomePage() {
                   View all
                 </Link>
               </div>
-              {posts.map((p) => (
+              {posts.map((p: Post) => (
                 <PostCard key={p.slug} post={p} variant="compact" />
               ))}
             </div>
