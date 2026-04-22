@@ -68,6 +68,39 @@ export type Database = {
         }
         Relationships: []
       }
+      editor_requests: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["editor_request_status"]
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["editor_request_status"]
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["editor_request_status"]
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           author: string | null
@@ -211,6 +244,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "editor" | "user"
+      editor_request_status: "pending" | "accepted" | "rejected"
       post_status: "draft" | "published" | "scheduled"
     }
     CompositeTypes: {
@@ -340,6 +374,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "editor", "user"],
+      editor_request_status: ["pending", "accepted", "rejected"],
       post_status: ["draft", "published", "scheduled"],
     },
   },
