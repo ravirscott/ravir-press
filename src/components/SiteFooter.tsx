@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { CATEGORIES, SITE } from "@/data/posts";
+import { JoinAsEditorDialog } from "@/components/JoinAsEditorDialog";
 
 export function SiteFooter() {
   return (
@@ -33,6 +34,15 @@ export function SiteFooter() {
               <li><Link to="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link></li>
               <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link></li>
               <li><a href="/sitemap.xml" className="text-muted-foreground hover:text-foreground">Sitemap</a></li>
+              <li>
+                <JoinAsEditorDialog
+                  trigger={
+                    <button className="text-gold hover:text-gold/80 transition-colors">
+                      Join as Editor →
+                    </button>
+                  }
+                />
+              </li>
             </ul>
           </div>
         </div>
