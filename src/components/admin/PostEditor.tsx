@@ -72,33 +72,44 @@ export function PostEditor({ initial, onSaved }: { initial?: EditablePost; onSav
   };
 
   const save = async (status: "draft" | "published" | "scheduled") => {
+    if (!user) { toast.error("Not signed in"); return; }
     setBusy(true);
     try {
-      const slug = p.slug || slugify(p.title);
-      if (!slug || !p.title) { toast.error("Title is required"); return; }
+      let slug = p.slug || slugify(p.title);
+      if (!slug || !p.title.trim()) { toast.error("Title is required"); setBusy(false); return; }
+      // Ensure slug uniqueness on create
+      if (!initial?.id) {
+        const { data: existing } = await supabase.from("posts").select("slug").eq("slug", slug).maybeSingle();
+        if (existing) slug = `${slug}-${Date.now().toString(36).slice(-5)}`;
+      }
       const tags = tagsText.split(",").map((t) => t.trim()).filter(Boolean);
       const body = parseBody(bodyText);
       const payload = {
         ...p, slug, tags, body, status,
-        published_at: status === "published" ? new Date().toISOString() : (p as { published_at?: string }).published_at ?? null,
-        author_id: user?.id ?? null,
+        published_at: status === "published"
+          ? ((p as { published_at?: string }).published_at ?? new Date().toISOString())
+          : (p as { published_at?: string }).published_at ?? null,
+        author_id: user.id,
       };
       delete (payload as { id?: string }).id;
+      console.log("[post] saving:", { id: initial?.id, slug, status });
       if (initial?.id) {
         const { error } = await supabase.from("posts").update(payload).eq("id", initial.id);
-        if (error) throw error;
+        if (error) { console.error("[post] update error:", error); throw error; }
       } else {
         const { error } = await supabase.from("posts").insert(payload);
-        if (error) throw error;
+        if (error) { console.error("[post] insert error:", error); throw error; }
       }
       await supabase.from("activity_logs").insert({
-        user_id: user?.id, action: initial?.id ? "post.updated" : "post.created",
+        user_id: user.id, action: initial?.id ? "post.updated" : "post.created",
         entity_type: "post", entity_id: slug, metadata: { status },
       });
       toast.success(status === "published" ? "Published" : "Saved");
       onSaved(slug);
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : "Save failed");
+      const msg = e instanceof Error ? e.message : "Save failed";
+      console.error("[post] save failed:", e);
+      toast.error(msg);
     } finally { setBusy(false); }
   };
 

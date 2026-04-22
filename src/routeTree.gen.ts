@@ -20,6 +20,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PostSlugRouteImport } from './routes/post.$slug'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
+import { Route as ApiAiGenerateRouteImport } from './routes/api.ai-generate'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminPostsRouteImport } from './routes/admin.posts'
@@ -84,6 +85,11 @@ const CategorySlugRoute = CategorySlugRouteImport.update({
   path: '/category/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAiGenerateRoute = ApiAiGenerateRouteImport.update({
+  id: '/api/ai-generate',
+  path: '/api/ai-generate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/admin/posts': typeof AdminPostsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/ai-generate': typeof ApiAiGenerateRoute
   '/category/$slug': typeof CategorySlugRoute
   '/post/$slug': typeof PostSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/admin/posts': typeof AdminPostsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/ai-generate': typeof ApiAiGenerateRoute
   '/category/$slug': typeof CategorySlugRoute
   '/post/$slug': typeof PostSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/admin/posts': typeof AdminPostsRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/ai-generate': typeof ApiAiGenerateRoute
   '/category/$slug': typeof CategorySlugRoute
   '/post/$slug': typeof PostSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/admin/posts'
     | '/admin/settings'
     | '/admin/users'
+    | '/api/ai-generate'
     | '/category/$slug'
     | '/post/$slug'
     | '/admin/'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/admin/posts'
     | '/admin/settings'
     | '/admin/users'
+    | '/api/ai-generate'
     | '/category/$slug'
     | '/post/$slug'
     | '/admin'
@@ -246,6 +257,7 @@ export interface FileRouteTypes {
     | '/admin/posts'
     | '/admin/settings'
     | '/admin/users'
+    | '/api/ai-generate'
     | '/category/$slug'
     | '/post/$slug'
     | '/admin/'
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiAiGenerateRoute: typeof ApiAiGenerateRoute
   CategorySlugRoute: typeof CategorySlugRoute
   PostSlugRoute: typeof PostSlugRoute
 }
@@ -343,6 +356,13 @@ declare module '@tanstack/react-router' {
       path: '/category/$slug'
       fullPath: '/category/$slug'
       preLoaderRoute: typeof CategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai-generate': {
+      id: '/api/ai-generate'
+      path: '/api/ai-generate'
+      fullPath: '/api/ai-generate'
+      preLoaderRoute: typeof ApiAiGenerateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
@@ -449,6 +469,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiAiGenerateRoute: ApiAiGenerateRoute,
   CategorySlugRoute: CategorySlugRoute,
   PostSlugRoute: PostSlugRoute,
 }
